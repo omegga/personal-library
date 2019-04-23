@@ -3,6 +3,7 @@
 var express     = require('express');
 var bodyParser  = require('body-parser');
 var cors        = require('cors');
+const helmet = require('helmet');
 const dotenv = require('dotenv');
 dotenv.config();
 
@@ -12,6 +13,8 @@ var runner            = require('./test-runner');
 
 var app = express();
 
+app.use(helmet.noCache());
+app.use(helmet.hidePoweredBy({ setTo: 'PHP 4.2.0' }));
 app.use('/public', express.static(process.cwd() + '/public'));
 
 app.use(cors({origin: '*'})); //USED FOR FCC TESTING PURPOSES ONLY!
@@ -19,11 +22,6 @@ app.use(cors({origin: '*'})); //USED FOR FCC TESTING PURPOSES ONLY!
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use((req, res, next) => {
-  console.log(req.method, req.url);
-  console.log('body ', req.body);
-  next();
-});
 
 //Index page (static HTML)
 app.route('/')
