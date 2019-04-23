@@ -16,15 +16,31 @@ const MONGODB_CONNECTION_STRING = process.env.DB;
 
 module.exports = function (app) {
 
+  let booksCollection;
+  MongoClient.connect(MONGODB_CONNECTION_STRING, (err, db) => {
+    if (err) {
+      throw err;
+    }
+    console.log('successfully connected to database');
+    booksCollection = db.collection('books');
+  });
+
   app.route('/api/books')
     .get(function (req, res){
       //response will be array of book objects
       //json res format: [{"_id": bookid, "title": book_title, "commentcount": num_of_comments },...]
     })
     
-    .post(function (req, res){
+    .post(async function (req, res){
       var title = req.body.title;
       //response will contain new book object including atleast _id and title
+      let result;
+      try {
+        result = await booksCollection.insertOne({ title });
+      } catch (e) {
+        next(e);
+      }
+      res.json(result.ops[0]);
     })
     
     .delete(function(req, res){

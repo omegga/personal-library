@@ -19,18 +19,18 @@ suite('Functional Tests', function() {
   * ----[EXAMPLE TEST]----
   * Each test should completely test the response of the API end-point including response status code!
   */
-  test('#example Test GET /api/books', function(done){
-     chai.request(server)
-      .get('/api/books')
-      .end(function(err, res){
-        assert.equal(res.status, 200);
-        assert.isArray(res.body, 'response should be an array');
-        assert.property(res.body[0], 'commentcount', 'Books in array should contain commentcount');
-        assert.property(res.body[0], 'title', 'Books in array should contain title');
-        assert.property(res.body[0], '_id', 'Books in array should contain _id');
-        done();
-      });
-  });
+  // test('#example Test GET /api/books', function(done){
+  //    chai.request(server)
+  //     .get('/api/books')
+  //     .end(function(err, res){
+  //       assert.equal(res.status, 200);
+  //       assert.isArray(res.body, 'response should be an array');
+  //       assert.property(res.body[0], 'commentcount', 'Books in array should contain commentcount');
+  //       assert.property(res.body[0], 'title', 'Books in array should contain title');
+  //       assert.property(res.body[0], '_id', 'Books in array should contain _id');
+  //       done();
+  //     });
+  // });
   /*
   * ----[END of EXAMPLE TEST]----
   */
@@ -41,7 +41,17 @@ suite('Functional Tests', function() {
     suite('POST /api/books with title => create book object/expect book object', function() {
       
       test('Test POST /api/books with title', function(done) {
-        //done();
+        chai.request(server)
+        .post('/api/books')
+        .send({
+          title: 'bible'
+        })
+        .end((err, res) => {
+          assert.equal(res.status, 200, 'response status should be 200');
+          assert.property(res.body, '_id', 'body should have an _id')
+          assert.property(res.body, 'title', 'body should have a title');
+        });
+        done();
       });
       
       test('Test POST /api/books with no title given', function(done) {
